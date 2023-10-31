@@ -76,6 +76,8 @@ class LaMa:
 
     @torch.no_grad()
     def inpaint(self, image: np.ndarray, mask: np.ndarray):
+        print(mask.shape)
+
         assert len(mask.shape) == 2
         if np.max(mask) == 1:
             mask = mask * 255

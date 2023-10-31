@@ -4,15 +4,16 @@ import os
 from transformers import MaskFormerForInstanceSegmentation, MaskFormerImageProcessor
 from torch import index_select, tensor
 import numpy as np
+from typing import List
 
 
 class MaskFormer:
-    def __init__(self, ckpt: str | os.PathLike, label_file: str | os.PathLike):
+    def __init__(self, ckpt: str , label_file: str ):
         self.model = MaskFormerForInstanceSegmentation.from_pretrained(ckpt)
         self.processor = MaskFormerImageProcessor()
         self.labels = json.load(open(label_file, "r"))
 
-    def segment(self, image: np.ndarray, to_select: list[str]):
+    def segment(self, image: np.ndarray, to_select: List[str]):
         inputs = self.processor(images=image, return_tensors="pt")
         outputs = self.model(**inputs)
         batch_size = outputs.class_queries_logits.shape[0]
